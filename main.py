@@ -7,11 +7,21 @@ class Student:
         self.courses_in_progress = []
         self.grades = {}
 
-    def add_courses(self, course_name):
+    def fin_course(self, course_name):
         self.finished_courses.append(course_name)
 
     def studies(self, course_name):
         self.courses_in_progress.append(course_name)
+
+    def evaluate(self, lecturer, course_name, grade):
+        if isinstance(lecturer, Lecturer) and course_name in self.finished_courses and \
+                course_name in lecturer.courses_attached:
+            if course_name in lecturer.grades:
+                lecturer.grades[course_name] += [grade]
+            else:
+                lecturer.grades[course_name] = [grade]
+        else:
+            return 'Ошибка'
 
 
 class Mentor:
@@ -20,14 +30,31 @@ class Mentor:
         self.surname = surname
         self.courses_attached = []
 
-    def rate_hw(self, student, course, grade):
-        if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
-            if course in student.grades:
-                student.grades[course] += [grade]
+
+class Lecturer(Mentor):
+    def __init__(self, name, surname):
+        super().__init__(self, Mentor)
+        self.lectures_grades = []
+        self.grades = {}
+
+    def leads(self, course_name):
+        self.courses_attached.append(course_name)
+
+    def add_lectures(self, course_name):
+        self.lectures_grades.append(course_name)
+
+
+class Reviewer(Mentor):
+    def rate_hw(self, student, course_name, grade):
+        if isinstance(student, Student) and course_name in self.courses_attached and \
+                course_name in student.courses_in_progress:
+            if course_name in student.grades:
+                student.grades[course_name] += [grade]
             else:
-                student.grades[course] = [grade]
+                student.grades[course_name] = [grade]
         else:
             return 'Ошибка'
+    pass
 
 
 best_student = Student('Ruoy', 'Eman', 'your_gender')
@@ -36,42 +63,50 @@ best_student.courses_in_progress += ['Python']
 cool_mentor = Mentor('Some', 'Buddy')
 cool_mentor.courses_attached += ['Python']
 
-cool_mentor.rate_hw(best_student, 'Python', 10)
-cool_mentor.rate_hw(best_student, 'Python', 10)
-cool_mentor.rate_hw(best_student, 'Python', 10)
+lecturer_1 = Lecturer('Яков', 'Умнов')
+# print(lecturer_1.__dict__)
 
-first_student = Student('Виктор', 'Малинин', 'M')
-first_student.studies('Git')
-first_student.studies('Django')
-first_student.add_courses('Python')
+reviewer_1 = Reviewer('Максим', 'Кнутов')
+reviewer_1.courses_attached += ['Python']
+reviewer_1.rate_hw(best_student, 'Python', 10)
 
-second_student = Student('Елена', 'Перепёлкина', 'F')
-second_student.courses_in_progress += ['Python']
-second_student.courses_in_progress += ['Django']
-second_student.finished_courses += ['Git']
+# cool_mentor.rate_hw(best_student, 'Python', 10)
+# cool_mentor.rate_hw(best_student, 'Python', 10)
+# cool_mentor.rate_hw(best_student, 'Python', 10)
 
-third_student = Student('Марина', 'Веточкина', 'F')
-third_student.courses_in_progress += ['Django']
-third_student.finished_courses += ['Python']
-third_student.finished_courses += ['Git']
+student_1 = Student('Виктор', 'Малинин', 'M')
+student_1.studies('Git')
+student_1.studies('Django')
+student_1.fin_course('Python')
 
-fourth_student = Student('Игорь', 'Лысиков', 'M')
-fourth_student.courses_in_progress += ['Git']
-fourth_student.finished_courses += ['Python']
-fourth_student.finished_courses += ['Django']
 
-fifth_student = Student('Наталья', 'Пуговкина', 'F')
-fifth_student.finished_courses += ['Git']
-fifth_student.finished_courses += ['Python']
-fifth_student.finished_courses += ['Django']
+student_2 = Student('Елена', 'Перепёлкина', 'F')
+student_2.courses_in_progress += ['Python']
+student_2.courses_in_progress += ['Django']
+student_2.finished_courses += ['Git']
 
-sixth_student = Student('Виталий', 'Наливкин', 'M')
-sixth_student.courses_in_progress += ['Git']
-sixth_student.courses_in_progress += ['Python']
-sixth_student.courses_in_progress += ['Django']
+student_3 = Student('Марина', 'Веточкина', 'F')
+student_3.courses_in_progress += ['Django']
+student_3.finished_courses += ['Python']
+student_3.finished_courses += ['Git']
+
+student_4 = Student('Игорь', 'Лысиков', 'M')
+student_4.courses_in_progress += ['Git']
+student_4.finished_courses += ['Python']
+student_4.finished_courses += ['Django']
+
+student_5 = Student('Наталья', 'Пуговкина', 'F')
+student_5.finished_courses += ['Git']
+student_5.finished_courses += ['Python']
+student_5.finished_courses += ['Django']
+
+student_6 = Student('Виталий', 'Наливкин', 'M')
+student_6.courses_in_progress += ['Git']
+student_6.courses_in_progress += ['Python']
+student_6.courses_in_progress += ['Django']
 
 print(best_student.grades)
 
 # help(Student)
 
-print(first_student.__dict__)
+print(student_1.__dict__)
